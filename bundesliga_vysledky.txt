@@ -1,0 +1,167 @@
+V celej datovej sade BundesLiga sa nachadza: Vyhry: 1102, Prehry: 741, Remizy: 605
+V testovacej sade BundesLiga sa nachadza: Vyhry: 221, Prehry: 146, Remizy: 123
+
+---------------------------------------------[ Jednovrstvovy perceptron KERAS ]---------------------------------------------
+Pocet kombinacii:  16
+--------
+Model 1 parametre: aktivacna funkcia = softmax, optimizer = adam
+Presnost modelu 1: 57.959%
+Predikovane vysledky:               Vyhry: 309, Prehry: 140, Remizy: 41
+Predikovane spravne vysledky:       Vyhry: 188, Prehry: 82, Remizy: 14
+--------
+Model 2 parametre: aktivacna funkcia = sigmoid, optimizer = adam
+Presnost modelu 2: 57.959%
+Predikovane vysledky:               Vyhry: 309, Prehry: 140, Remizy: 41
+Predikovane spravne vysledky:       Vyhry: 188, Prehry: 82, Remizy: 14
+--------
+Model 3 parametre: aktivacna funkcia = softmax, optimizer = rmsprop
+Presnost modelu 3: 57.347%
+Predikovane vysledky:               Vyhry: 300, Prehry: 143, Remizy: 47
+Predikovane spravne vysledky:       Vyhry: 183, Prehry: 82, Remizy: 16
+--------
+Model 4 parametre: aktivacna funkcia = sigmoid, optimizer = rmsprop
+Presnost modelu 4: 57.347%
+Predikovane vysledky:               Vyhry: 300, Prehry: 143, Remizy: 47
+Predikovane spravne vysledky:       Vyhry: 183, Prehry: 82, Remizy: 16
+--------
+Model 5 parametre: aktivacna funkcia = softmax, optimizer = SGD
+Presnost modelu 5: 55.510%
+Predikovane vysledky:               Vyhry: 306, Prehry: 140, Remizy: 44
+Predikovane spravne vysledky:       Vyhry: 183, Prehry: 76, Remizy: 13
+--------
+Model 6 parametre: aktivacna funkcia = sigmoid, optimizer = SGD
+Presnost modelu 6: 55.510%
+Predikovane vysledky:               Vyhry: 306, Prehry: 140, Remizy: 44
+Predikovane spravne vysledky:       Vyhry: 183, Prehry: 76, Remizy: 13
+--------
+Model 7 parametre: aktivacna funkcia = tanh, optimizer = rmsprop
+Presnost modelu 7: 49.592%
+Predikovane vysledky:               Vyhry: 228, Prehry: 164, Remizy: 98
+Predikovane spravne vysledky:       Vyhry: 137, Prehry: 74, Remizy: 32
+--------
+Model 8 parametre: aktivacna funkcia = relu, optimizer = rmsprop
+Presnost modelu 8: 46.327%
+Predikovane vysledky:               Vyhry: 154, Prehry: 317, Remizy: 19
+Predikovane spravne vysledky:       Vyhry: 101, Prehry: 118, Remizy: 8
+--------
+Model 9 parametre: aktivacna funkcia = relu, optimizer = adam
+Presnost modelu 9: 44.694%
+Predikovane vysledky:               Vyhry: 185, Prehry: 268, Remizy: 37
+Predikovane spravne vysledky:       Vyhry: 111, Prehry: 97, Remizy: 11
+--------
+Model 10 parametre: aktivacna funkcia = tanh, optimizer = adam
+Presnost modelu 10: 42.857%
+Predikovane vysledky:               Vyhry: 209, Prehry: 165, Remizy: 116
+Predikovane spravne vysledky:       Vyhry: 116, Prehry: 61, Remizy: 33
+--------
+Model 11 parametre: aktivacna funkcia = softmax, optimizer = Adadelta
+Presnost modelu 11: 34.694%
+Predikovane vysledky:               Vyhry: 144, Prehry: 194, Remizy: 152
+Predikovane spravne vysledky:       Vyhry: 72, Prehry: 51, Remizy: 47
+--------
+Model 12 parametre: aktivacna funkcia = sigmoid, optimizer = Adadelta
+Presnost modelu 12: 34.694%
+Predikovane vysledky:               Vyhry: 144, Prehry: 194, Remizy: 152
+Predikovane spravne vysledky:       Vyhry: 72, Prehry: 51, Remizy: 47
+--------
+Model 13 parametre: aktivacna funkcia = tanh, optimizer = Adadelta
+Presnost modelu 13: 34.286%
+Predikovane vysledky:               Vyhry: 142, Prehry: 195, Remizy: 153
+Predikovane spravne vysledky:       Vyhry: 70, Prehry: 51, Remizy: 47
+--------
+Model 14 parametre: aktivacna funkcia = relu, optimizer = Adadelta
+Presnost modelu 14: 33.469%
+Predikovane vysledky:               Vyhry: 126, Prehry: 235, Remizy: 129
+Predikovane spravne vysledky:       Vyhry: 65, Prehry: 63, Remizy: 36
+--------
+Model 15 parametre: aktivacna funkcia = tanh, optimizer = SGD
+Presnost modelu 15: 32.857%
+Predikovane vysledky:               Vyhry: 135, Prehry: 65, Remizy: 290
+Predikovane spravne vysledky:       Vyhry: 72, Prehry: 22, Remizy: 67
+--------
+Model 16 parametre: aktivacna funkcia = relu, optimizer = SGD
+Presnost modelu 16: 29.796%
+Predikovane vysledky:               Vyhry: 1, Prehry: 488, Remizy: 1
+Predikovane spravne vysledky:       Vyhry: 1, Prehry: 145, Remizy: 0
+--------
+
+---------------------------------------------[ Jednovrstvovy perceptron MLPC Scikit ]---------------------------------------------
+Pocet kombinacii:  108
+Najlepsie 3 modely: 
+--------
+Model 1 parametre: aktivacna funkcia = tanh solver = adam, hidden_layer_sizes = 100, max_iter = 10
+Presnost modelu 1: 60.816%
+Predikovane vysledky:               Vyhry: 272, Prehry: 155, Remizy: 63
+Predikovane spravne vysledky:       Vyhry: 177, Prehry: 91, Remizy: 30
+--------
+Model 2 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = 10, max_iter = 50
+Presnost modelu 2: 60.000%
+Predikovane vysledky:               Vyhry: 276, Prehry: 157, Remizy: 57
+Predikovane spravne vysledky:       Vyhry: 176, Prehry: 91, Remizy: 27
+--------
+Model 3 parametre: aktivacna funkcia = logistic solver = lbfgs, hidden_layer_sizes = 100, max_iter = 50
+Presnost modelu 3: 59.796%
+Predikovane vysledky:               Vyhry: 274, Prehry: 157, Remizy: 59
+Predikovane spravne vysledky:       Vyhry: 177, Prehry: 91, Remizy: 25
+--------
+
+---------------------------------------------[ Viacvrstvovy perceptron KERAS ]---------------------------------------------
+Pocet kombinacii:  256
+Najlepsie 3 modely: 
+--------
+Model 1 parametre: aktivacna funkcia 1 = tanh, aktivacna funkcia 2 = tanh, aktivacna funkcia 3 = sigmoid, optimizer = rmsprop
+Presnost modelu 1: 62.245%
+Predikovane vysledky:               Vyhry: 271, Prehry: 153, Remizy: 66
+Predikovane spravne vysledky:       Vyhry: 180, Prehry: 95, Remizy: 30
+--------
+Model 2 parametre: aktivacna funkcia 1 = tanh, aktivacna funkcia 2 = tanh, aktivacna funkcia 3 = softmax, optimizer = rmsprop
+Presnost modelu 2: 62.245%
+Predikovane vysledky:               Vyhry: 271, Prehry: 153, Remizy: 66
+Predikovane spravne vysledky:       Vyhry: 180, Prehry: 95, Remizy: 30
+--------
+Model 3 parametre: aktivacna funkcia 1 = sigmoid, aktivacna funkcia 2 = sigmoid, aktivacna funkcia 3 = sigmoid, optimizer = adam
+Presnost modelu 3: 60.000%
+Predikovane vysledky:               Vyhry: 272, Prehry: 176, Remizy: 42
+Predikovane spravne vysledky:       Vyhry: 174, Prehry: 99, Remizy: 21
+--------
+
+---------------------------------------------[ Viacvrstvovy perceptron MLPC Scikit ]---------------------------------------------
+Pocet kombinacii:  144
+Najlepsie 3 modely: 
+--------
+Model 1 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = (150, 75, 3), max_iter = 32
+Presnost modelu 1: 61.224%
+Predikovane vysledky:               Vyhry: 246, Prehry: 141, Remizy: 103
+Predikovane spravne vysledky:       Vyhry: 167, Prehry: 91, Remizy: 42
+--------
+Model 2 parametre: aktivacna funkcia = logistic solver = lbfgs, hidden_layer_sizes = (130, 65, 3), max_iter = 32
+Presnost modelu 2: 60.816%
+Predikovane vysledky:               Vyhry: 272, Prehry: 165, Remizy: 53
+Predikovane spravne vysledky:       Vyhry: 178, Prehry: 98, Remizy: 22
+--------
+Model 3 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = (150, 75, 3), max_iter = 32
+Presnost modelu 3: 60.612%
+Predikovane vysledky:               Vyhry: 289, Prehry: 138, Remizy: 63
+Predikovane spravne vysledky:       Vyhry: 183, Prehry: 88, Remizy: 26
+--------
+
+
+---------------------------------------------[ LSTM KERAS ]---------------------------------------------
+Pocet kombinacii:  36
+Najlepsie 3 modely: 
+--------
+Model 1 parametre: aktivacna funkcia = sigmoid, optimizer = adam, dropout_rate = 0.2, epochs = 10
+Presnost modelu 1: 46.122%
+Predikovane vysledky:               Vyhry: 321, Prehry: 159, Remizy: 10
+Predikovane spravne vysledky:       Vyhry: 162, Prehry: 62, Remizy: 2
+--------
+Model 2 parametre: aktivacna funkcia = softmax, optimizer = adam, dropout_rate = 0.2, epochs = 10
+Presnost modelu 2: 46.122%
+Predikovane vysledky:               Vyhry: 321, Prehry: 159, Remizy: 10
+Predikovane spravne vysledky:       Vyhry: 162, Prehry: 62, Remizy: 2
+--------
+Model 3 parametre: aktivacna funkcia = sigmoid, optimizer = adam, dropout_rate = 0.2, epochs = 8
+Presnost modelu 3: 45.918%
+Predikovane vysledky:               Vyhry: 393, Prehry: 79, Remizy: 18
+Predikovane spravne vysledky:       Vyhry: 190, Prehry: 30, Remizy: 5
+--------
