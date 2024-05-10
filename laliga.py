@@ -355,8 +355,8 @@ def lstm_in_keras(X_train_encoded, y_train, X_test_encoded, y_test):
         print('--------')
 
 
-# single_layer_perceptron_keras(X_train_encoded, y_train, X_test_encoded, y_test)
-# single_layer_perceptron_mlpc(X_train_encoded, y_train, X_test_encoded, y_test)   
+single_layer_perceptron_keras(X_train_encoded, y_train, X_test_encoded, y_test)
+single_layer_perceptron_mlpc(X_train_encoded, y_train, X_test_encoded, y_test)   
 mlp(X_train_encoded, y_train, X_test_encoded, y_test)
-# mlpc(X_train_encoded, y_train, X_test_encoded, y_test)
-# lstm_in_keras(X_train_encoded, y_train, X_test_encoded, y_test)
+mlpc(X_train_encoded, y_train, X_test_encoded, y_test)
+lstm_in_keras(X_train_encoded, y_train, X_test_encoded, y_test)
