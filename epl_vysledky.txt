@@ -86,7 +86,7 @@ Predikovane spravne vysledky:       Vyhry: 25, Prehry: 97, Remizy: 46
 --------
 
 ---------------------------------------------[ Jednovrstvovy perceptron MLPC Scikit ]---------------------------------------------
-Pocet kombinacii:  108
+Pocet kombinacii:  135
 Najlepsie 3 modely: 
 --------
 Model 1 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = 20, max_iter = 50
@@ -99,10 +99,10 @@ Presnost modelu 2: 63.651%
 Predikovane vysledky:               Vyhry: 324, Prehry: 228, Remizy: 56
 Predikovane spravne vysledky:       Vyhry: 211, Prehry: 153, Remizy: 23
 --------
-Model 3 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = 100, max_iter = 10
-Presnost modelu 3: 63.487%
-Predikovane vysledky:               Vyhry: 325, Prehry: 232, Remizy: 51
-Predikovane spravne vysledky:       Vyhry: 211, Prehry: 154, Remizy: 21
+Model 3 parametre: aktivacna funkcia = relu solver = adam, hidden_layer_sizes = 30, max_iter = 10
+Presnost modelu 3: 63.651%
+Predikovane vysledky:               Vyhry: 329, Prehry: 217, Remizy: 62
+Predikovane spravne vysledky:       Vyhry: 215, Prehry: 144, Remizy: 28
 --------
 
 ---------------------------------------------[ Viacvrstvovy perceptron KERAS ]---------------------------------------------
@@ -126,20 +126,20 @@ Predikovane spravne vysledky:       Vyhry: 215, Prehry: 157, Remizy: 11
 --------
 
 ---------------------------------------------[ Viacvrstvovy perceptron MLPC Scikit ]---------------------------------------------
-Pocet kombinacii:  90
+Pocet kombinacii:  144
 Najlepsie 3 modely: 
 --------
-Model 1 parametre: aktivacna funkcia = relu solver = sgd, hidden_layer_sizes = (80, 40, 3), max_iter = 32
+Model 1 parametre: aktivacna funkcia = relu solver = sgd, hidden_layer_sizes = (80, 40, 3), max_iter = 100
 Presnost modelu 1: 63.487%
 Predikovane vysledky:               Vyhry: 341, Prehry: 219, Remizy: 48
 Predikovane spravne vysledky:       Vyhry: 216, Prehry: 148, Remizy: 22
 --------
-Model 2 parametre: aktivacna funkcia = logistic solver = lbfgs, hidden_layer_sizes = (150, 75, 3), max_iter = 32
+Model 2 parametre: aktivacna funkcia = logistic solver = lbfgs, hidden_layer_sizes = (150, 75, 3), max_iter = 100
 Presnost modelu 2: 62.829%
 Predikovane vysledky:               Vyhry: 343, Prehry: 233, Remizy: 32
 Predikovane spravne vysledky:       Vyhry: 215, Prehry: 153, Remizy: 14
 --------
-Model 3 parametre: aktivacna funkcia = tanh solver = sgd, hidden_layer_sizes = (120, 60, 3), max_iter = 32
+Model 3 parametre: aktivacna funkcia = tanh solver = sgd, hidden_layer_sizes = (120, 60, 3), max_iter = 100
 Presnost modelu 3: 62.500%
 Predikovane vysledky:               Vyhry: 333, Prehry: 218, Remizy: 57
 Predikovane spravne vysledky:       Vyhry: 214, Prehry: 144, Remizy: 22

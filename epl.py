@@ -119,7 +119,7 @@ def single_layer_perceptron_mlpc(X_train_encoded, y_train, X_test_encoded, y_tes
     param_grid = {
         'activation': ['logistic', 'tanh', 'relu'],
         'solver': ['lbfgs', 'sgd', 'adam'],
-        'hidden_layer_sizes': [10, 20, 50, 100],
+        'hidden_layer_sizes': [10, 20, 30 , 50, 100],
         'max_iter': [10, 50, 100],
         'batch_size': [32],
         'random_state': [42],
@@ -237,10 +237,13 @@ def mlpc(X_train_encoded, y_train, X_test_encoded, y_test):
         (80, 40, 3),
         (120, 60, 3),
         (150, 75, 3),
-        (90, 45, 3)
+        (90, 45, 3),
+        (110, 55, 3),
+        (130, 65, 3),
+        (140, 70, 3),
     ],
-    'batch_size': [32],
     'max_iter': [50, 100],
+    'batch_size': [32],
     'random_state': [42],
 }
     model = MLPClassifier()

@@ -59,7 +59,6 @@ X_test_encoded = ct.transform(X_test)
 
 
 
-
 ############################################################### Jednovrstvovy perceptron KERAS ######################################################################
 
 def single_layer_perceptron_keras(X_train_encoded, y_train, X_test_encoded, y_test):
@@ -120,7 +119,7 @@ def single_layer_perceptron_mlpc(X_train_encoded, y_train, X_test_encoded, y_tes
     param_grid = {
         'activation': ['logistic', 'tanh', 'relu'],
         'solver': ['lbfgs', 'sgd', 'adam'],
-        'hidden_layer_sizes': [10, 20, 50, 100],
+        'hidden_layer_sizes': [10, 20, 30 , 50, 100],
         'max_iter': [10, 50, 100],
         'batch_size': [32],
         'random_state': [42],
@@ -359,4 +358,4 @@ single_layer_perceptron_keras(X_train_encoded, y_train, X_test_encoded, y_test)
 single_layer_perceptron_mlpc(X_train_encoded, y_train, X_test_encoded, y_test)   
 mlp(X_train_encoded, y_train, X_test_encoded, y_test)
 mlpc(X_train_encoded, y_train, X_test_encoded, y_test)
-lstm_in_keras(X_train_encoded, y_train, X_test_encoded, y_test)
+lstm_in_keras(X_train_encoded, y_train, X_test_encoded, y_test)  

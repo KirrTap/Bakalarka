@@ -86,7 +86,7 @@ Predikovane spravne vysledky:       Vyhry: 1, Prehry: 145, Remizy: 0
 --------
 
 ---------------------------------------------[ Jednovrstvovy perceptron MLPC Scikit ]---------------------------------------------
-Pocet kombinacii:  108
+Pocet kombinacii:  135
 Najlepsie 3 modely: 
 --------
 Model 1 parametre: aktivacna funkcia = tanh solver = adam, hidden_layer_sizes = 100, max_iter = 10
@@ -129,17 +129,17 @@ Predikovane spravne vysledky:       Vyhry: 174, Prehry: 99, Remizy: 21
 Pocet kombinacii:  144
 Najlepsie 3 modely: 
 --------
-Model 1 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = (150, 75, 3), max_iter = 32
+Model 1 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = (150, 75, 3), max_iter = 100
 Presnost modelu 1: 61.224%
 Predikovane vysledky:               Vyhry: 246, Prehry: 141, Remizy: 103
 Predikovane spravne vysledky:       Vyhry: 167, Prehry: 91, Remizy: 42
 --------
-Model 2 parametre: aktivacna funkcia = logistic solver = lbfgs, hidden_layer_sizes = (130, 65, 3), max_iter = 32
+Model 2 parametre: aktivacna funkcia = logistic solver = lbfgs, hidden_layer_sizes = (130, 65, 3), max_iter = 50
 Presnost modelu 2: 60.816%
 Predikovane vysledky:               Vyhry: 272, Prehry: 165, Remizy: 53
 Predikovane spravne vysledky:       Vyhry: 178, Prehry: 98, Remizy: 22
 --------
-Model 3 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = (150, 75, 3), max_iter = 32
+Model 3 parametre: aktivacna funkcia = logistic solver = adam, hidden_layer_sizes = (150, 75, 3), max_iter = 50
 Presnost modelu 3: 60.612%
 Predikovane vysledky:               Vyhry: 289, Prehry: 138, Remizy: 63
 Predikovane spravne vysledky:       Vyhry: 183, Prehry: 88, Remizy: 26

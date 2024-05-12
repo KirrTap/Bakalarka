@@ -86,7 +86,7 @@ Predikovane spravne vysledky:       Vyhry: 54, Prehry: 174, Remizy: 11
 --------
 
 ---------------------------------------------[ Jednovrstvovy perceptron MLPC Scikit ]---------------------------------------------
-Pocet kombinacii:  108
+Pocet kombinacii:  135
 Najlepsie 3 modely: 
 --------
 Model 1 parametre: aktivacna funkcia = relu solver = adam, hidden_layer_sizes = 100, max_iter = 10
@@ -99,10 +99,10 @@ Presnost modelu 2: 63.322%
 Predikovane vysledky:               Vyhry: 308, Prehry: 195, Remizy: 105
 Predikovane spravne vysledky:       Vyhry: 205, Prehry: 130, Remizy: 50
 --------
-Model 3 parametre: aktivacna funkcia = relu solver = lbfgs, hidden_layer_sizes = 20, max_iter = 10
-Presnost modelu 3: 62.993%
-Predikovane vysledky:               Vyhry: 325, Prehry: 188, Remizy: 95
-Predikovane spravne vysledky:       Vyhry: 212, Prehry: 126, Remizy: 45
+Model 3 parametre: aktivacna funkcia = relu solver = sgd, hidden_layer_sizes = 30, max_iter = 100
+Presnost modelu 3: 63.322%
+Predikovane vysledky:               Vyhry: 308, Prehry: 212, Remizy: 88
+Predikovane spravne vysledky:       Vyhry: 204, Prehry: 137, Remizy: 44
 --------
 
 ---------------------------------------------[ Viacvrstvovy perceptron KERAS ]---------------------------------------------
