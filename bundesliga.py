@@ -4,8 +4,6 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import pandas as pd
-import numpy as np
-from numpy.random import seed
 from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential
 from keras.layers import Dense , LSTM, Dropout
@@ -14,10 +12,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-import tensorflow as tf
 from itertools import product
-
-
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score
 ############################################################### Nacitanie a uprava dat######################################################################
 sezona1 = pd.read_csv("BundesLiga_dataset/BundesLiga_2014-2015.csv")
 sezona2 = pd.read_csv("BundesLiga_dataset/BundesLiga_2015-2016.csv")
@@ -69,100 +67,72 @@ def single_layer_perceptron_keras(X_train_encoded, y_train, X_test_encoded, y_te
         model.compile(loss='sparse_categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
         return model
 
-    model = KerasClassifier(model=create_model, verbose=0)
+   
     param_grid = {
         'model__optimizer': ['adam', 'Adadelta', 'SGD', 'rmsprop'],
         'model__activation': ['softmax', 'sigmoid', 'relu', 'tanh'],
         'epochs': [15],
-        'batch_size': [32],
-        'random_state': [42],
+        'batch_size': [32]
     }
 
-    # Vsetky kombinacie parametrov
-    all_param_combinations = list(product(*param_grid.values()))
+    model = KerasClassifier(build_fn=create_model, verbose=0)
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+    grid_search.fit(X_train_encoded, y_train)
+
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test_encoded)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    cv_scores = cross_val_score(best_model, X_train_encoded, y_train, cv=5, scoring='accuracy')
+
     print()
     print('---------------------------------------------[ Jednovrstvovy perceptron KERAS ]---------------------------------------------')
-    print('Pocet kombinacii: ', len(all_param_combinations))
-    print('--------')
-    results = []
-    for params in all_param_combinations:     # Robim modely pre vsetky kombinacie parametrov
-        model.set_params(**dict(zip(param_grid.keys(), params))) 
-        model.fit(X_train_encoded, y_train)
-        y_pred = model.predict(X_test_encoded)
-
-        accuracy = (y_pred == y_test).mean()
-        predikovane_vyhry = sum(y_pred == 2)
-        predikovane_prehry = sum(y_pred == 0)
-        predikovane_remizy = sum(y_pred == 1)
-
-        spravne_vyhry = sum((y_pred == y_test) & (y_test == 2))
-        spravne_prehry = sum((y_pred == y_test) & (y_test == 0))
-        spravne_remizy = sum((y_pred == y_test) & (y_test == 1))
-        results.append((params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy))
-
-    sorted_results = sorted(results, key=lambda x: x[1], reverse=True) # Zoradujem modely podla presnosti
-    # Vypisujem modely
-    for i, (params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy) in enumerate(sorted_results[:16], 1):
-        optimizer = params[0]
-        activation = params[1]
-        print(f"Model {i} parametre: aktivacna funkcia = {activation}, optimizer = {optimizer}")
-        print(f"Presnost modelu {i}: {accuracy*100:.3f}%")
-        print(f"Predikovane vysledky:               Vyhry: {predikovane_vyhry}, Prehry: {predikovane_prehry}, Remizy: {predikovane_remizy}")
-        print(f"Predikovane spravne vysledky:       Vyhry: {spravne_vyhry}, Prehry: {spravne_prehry}, Remizy: {spravne_remizy}")
-        print('--------')
+    print("Pocet kombinacii: ", len(list(product(*param_grid.values()))))
+    print('Najlepsie parametre modelu: ', grid_search.best_params_)
+    print("Cross-validacia skore: ", cv_scores)
+    print(f"Priemerna presnost modelu pri krizovej validacii: {cv_scores.mean()*100:.3f}%")
+    print(f"Rozpyl presnosti modelu pri krizovej validacii: ± {cv_scores.std()*100:.3f}%")
+    print(f"Presnost modelu na testovacej sade: {accuracy*100:.3f}%")
+    print('--------')   
+    print(f"Predikovane vysledky:               Vyhry: {sum(y_pred == 2)}, Prehry: {sum(y_pred == 0)}, Remizy: {sum(y_pred == 1)}")
+    print(f"Predikovane spravne vysledky:       Vyhry: {sum((y_pred == y_test) & (y_test == 2))}, Prehry: {sum((y_pred == y_test) & (y_test == 0))}, Remizy: {sum((y_pred == y_test) & (y_test == 1))}")
 
 
 
 
 ############################################################### Jednovrstvovy perceptron MLPC Scikit ######################################################################
 def single_layer_perceptron_mlpc(X_train_encoded, y_train, X_test_encoded, y_test):
-    # Definícia mriežky parametrov
+
     param_grid = {
         'activation': ['logistic', 'tanh', 'relu'],
         'solver': ['lbfgs', 'sgd', 'adam'],
         'hidden_layer_sizes': [10, 20, 30 , 50, 100],
         'max_iter': [10, 50, 100],
         'batch_size': [32],
-        'random_state': [42],
     }
     model = MLPClassifier()
 
-    # Vsetky kombinacie parametrov
-    all_param_combinations = list(product(*param_grid.values()))
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+    grid_search.fit(X_train_encoded, y_train)
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test_encoded)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    cv_scores = cross_val_score(best_model, X_train_encoded, y_train, cv=5, scoring='accuracy')
+
     print()
     print('---------------------------------------------[ Jednovrstvovy perceptron MLPC Scikit ]---------------------------------------------')
-    print('Pocet kombinacii: ', len(all_param_combinations))
-    print('Najlepsie 3 modely: ')
+    print("Pocet kombinacii: ", len(list(product(*param_grid.values()))))
+    print('Najlepsie parametre modelu: ', grid_search.best_params_)
+    print("Cross-validacia skore: ", cv_scores)
+    print(f"Priemerna presnost modelu pri krizovej validacii: {cv_scores.mean()*100:.3f}%")
+    print(f"Rozpyl presnosti modelu pri krizovej validacii: ± {cv_scores.std()*100:.3f}%")
+    print(f"Presnost modelu na testovacej sade: {accuracy*100:.3f}%")
     print('--------')
-    results = []
-    for params in all_param_combinations:     # Robim modely pre vsetky kombinacie parametrov
-        model.set_params(**dict(zip(param_grid.keys(), params))) 
-        model.fit(X_train_encoded, y_train)
-        y_pred = model.predict(X_test_encoded)
-
-        accuracy = (y_pred == y_test).mean()
-        predikovane_vyhry = sum(y_pred == 2)
-        predikovane_prehry = sum(y_pred == 0)
-        predikovane_remizy = sum(y_pred == 1)
-
-        spravne_vyhry = sum((y_pred == y_test) & (y_test == 2))
-        spravne_prehry = sum((y_pred == y_test) & (y_test == 0))
-        spravne_remizy = sum((y_pred == y_test) & (y_test == 1))
-        results.append((params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy))
-
-    sorted_results = sorted(results, key=lambda x: x[1], reverse=True) # Zoradujem modely podla presnosti
-    # Vypisujem modely
-    for i, (params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy) in enumerate(sorted_results[:3], 1):
-        activation = params[0]
-        solver = params[1]
-        layers = params[2]
-        max_iter = params[3]
-        print(f"Model {i} parametre: aktivacna funkcia = {activation} solver = {solver}, hidden_layer_sizes = {layers}, max_iter = {max_iter}")
-        print(f"Presnost modelu {i}: {accuracy*100:.3f}%")
-        print(f"Predikovane vysledky:               Vyhry: {predikovane_vyhry}, Prehry: {predikovane_prehry}, Remizy: {predikovane_remizy}")
-        print(f"Predikovane spravne vysledky:       Vyhry: {spravne_vyhry}, Prehry: {spravne_prehry}, Remizy: {spravne_remizy}")
-        print('--------')
- 
+    print(f"Predikovane vysledky:               Vyhry: {sum(y_pred == 2)}, Prehry: {sum(y_pred == 0)}, Remizy: {sum(y_pred == 1)}")
+    print(f"Predikovane spravne vysledky:       Vyhry: {sum((y_pred == y_test) & (y_test == 2))}, Prehry: {sum((y_pred == y_test) & (y_test == 0))}, Remizy: {sum((y_pred == y_test) & (y_test == 1))}")    
 
 
 
@@ -177,7 +147,7 @@ def mlp(X_train_encoded, y_train, X_test_encoded, y_test):
         model.compile(loss='sparse_categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
         return model
 
-    model = KerasClassifier(build_fn=create_model, verbose=0)
+    
     param_grid = {
         'model__activation1': ['relu', 'tanh', 'sigmoid', 'softmax'],
         'model__activation2': ['relu', 'tanh','sigmoid', 'softmax'],
@@ -185,51 +155,38 @@ def mlp(X_train_encoded, y_train, X_test_encoded, y_test):
         'model__optimizer': ['adam', 'sgd', 'rmsprop', 'Adadelta'],
         'epochs': [10],
         'batch_size': [32],
-        'random_state': [42],
     }
 
-    # Vsetky kombinacie parametrov
-    all_param_combinations = list(product(*param_grid.values()))
+    model = KerasClassifier(build_fn=create_model, verbose=0)
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+    grid_search.fit(X_train_encoded, y_train)
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test_encoded)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    cv_scores = cross_val_score(best_model, X_train_encoded, y_train, cv=5, scoring='accuracy')
+
     print()
     print('---------------------------------------------[ Viacvrstvovy perceptron KERAS ]---------------------------------------------')
-    print('Pocet kombinacii: ', len(all_param_combinations))
-    print('Najlepsie 3 modely: ')
+    print("Pocet kombinacii: ", len(list(product(*param_grid.values()))))
+    print('Najlepsie parametre modelu: ', grid_search.best_params_)
+    print("Cross-validacia skore: ", cv_scores)
+    print(f"Priemerna presnost modelu pri krizovej validacii: {cv_scores.mean()*100:.3f}%")
+    print(f"Rozpyl presnosti modelu pri krizovej validacii: ± {cv_scores.std()*100:.3f}%")
+    print(f"Presnost modelu na testovacej sade: {accuracy*100:.3f}%")
     print('--------')
-    results = []
-    for params in all_param_combinations:     # Robim modely pre vsetky kombinacie parametrov
-        model.set_params(**dict(zip(param_grid.keys(), params))) 
-        model.fit(X_train_encoded, y_train)
-        y_pred = model.predict(X_test_encoded)
+    print(f"Predikovane vysledky:               Vyhry: {sum(y_pred == 2)}, Prehry: {sum(y_pred == 0)}, Remizy: {sum(y_pred == 1)}")
+    print(f"Predikovane spravne vysledky:       Vyhry: {sum((y_pred == y_test) & (y_test == 2))}, Prehry: {sum((y_pred == y_test) & (y_test == 0))}, Remizy: {sum((y_pred == y_test) & (y_test == 1))}")
 
-        accuracy = (y_pred == y_test).mean()
-        predikovane_vyhry = sum(y_pred == 2)
-        predikovane_prehry = sum(y_pred == 0)
-        predikovane_remizy = sum(y_pred == 1)
-
-        spravne_vyhry = sum((y_pred == y_test) & (y_test == 2))
-        spravne_prehry = sum((y_pred == y_test) & (y_test == 0))
-        spravne_remizy = sum((y_pred == y_test) & (y_test == 1))
-        results.append((params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy))
-
-    sorted_results = sorted(results, key=lambda x: x[1], reverse=True) # Zoradujem modely podla presnosti
-    # Vypisujem modely
-    for i, (params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy) in enumerate(sorted_results[:3], 1):
-        activation1 = params[0]
-        activation2 = params[1]
-        activation3 = params[2]
-        optimizer = params[3]
-        print(f"Model {i} parametre: aktivacna funkcia 1 = {activation1}, aktivacna funkcia 2 = {activation2}, aktivacna funkcia 3 = {activation3}, optimizer = {optimizer}")
-        print(f"Presnost modelu {i}: {accuracy*100:.3f}%")
-        print(f"Predikovane vysledky:               Vyhry: {predikovane_vyhry}, Prehry: {predikovane_prehry}, Remizy: {predikovane_remizy}")
-        print(f"Predikovane spravne vysledky:       Vyhry: {spravne_vyhry}, Prehry: {spravne_prehry}, Remizy: {spravne_remizy}")
-        print('--------')
+   
 
 
 
 
 ############################################################### Viacvrstvovy perceptron MLPC Scikit ######################################################################
 def mlpc(X_train_encoded, y_train, X_test_encoded, y_test):
-    # Definícia mriežky parametrov
+
     param_grid = {
     'activation': ['relu', 'tanh', 'logistic'],
     'solver': ['adam', 'sgd', 'lbfgs'],
@@ -245,46 +202,31 @@ def mlpc(X_train_encoded, y_train, X_test_encoded, y_test):
     ],
     'max_iter': [50, 100],
     'batch_size': [32],
-    'random_state': [42],
+
 }
     model = MLPClassifier()
 
-    # Vsetky kombinacie parametrov
-    all_param_combinations = list(product(*param_grid.values()))
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+    grid_search.fit(X_train_encoded, y_train)
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test_encoded)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    cv_scores = cross_val_score(best_model, X_train_encoded, y_train, cv=5, scoring='accuracy')
+
     print()
     print('---------------------------------------------[ Viacvrstvovy perceptron MLPC Scikit ]---------------------------------------------')
-    print('Pocet kombinacii: ', len(all_param_combinations))
-    print('Najlepsie 3 modely: ')
+    print("Pocet kombinacii: ", len(list(product(*param_grid.values()))))
+    print('Najlepsie parametre modelu: ', grid_search.best_params_)
+    print("Cross-validacia skore: ", cv_scores)
+    print(f"Priemerna presnost modelu pri krizovej validacii: {cv_scores.mean()*100:.3f}%")
+    print(f"Rozpyl presnosti modelu pri krizovej validacii: ± {cv_scores.std()*100:.3f}%")
+    print(f"Presnost modelu na testovacej sade: {accuracy*100:.3f}%")
     print('--------')
-    results = []
-    for params in all_param_combinations:     # Robim modely pre vsetky kombinacie parametrov
-        model.set_params(**dict(zip(param_grid.keys(), params))) 
-        model.fit(X_train_encoded, y_train)
-        y_pred = model.predict(X_test_encoded)
+    print(f"Predikovane vysledky:               Vyhry: {sum(y_pred == 2)}, Prehry: {sum(y_pred == 0)}, Remizy: {sum(y_pred == 1)}")
+    print(f"Predikovane spravne vysledky:       Vyhry: {sum((y_pred == y_test) & (y_test == 2))}, Prehry: {sum((y_pred == y_test) & (y_test == 0))}, Remizy: {sum((y_pred == y_test) & (y_test == 1))}")
 
-        accuracy = (y_pred == y_test).mean()
-        predikovane_vyhry = sum(y_pred == 2)
-        predikovane_prehry = sum(y_pred == 0)
-        predikovane_remizy = sum(y_pred == 1)
-
-        spravne_vyhry = sum((y_pred == y_test) & (y_test == 2))
-        spravne_prehry = sum((y_pred == y_test) & (y_test == 0))
-        spravne_remizy = sum((y_pred == y_test) & (y_test == 1))
-        results.append((params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy))
-
-    sorted_results = sorted(results, key=lambda x: x[1], reverse=True) # Zoradujem modely podla presnosti
-    # Vypisujem modely
-    for i, (params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy) in enumerate(sorted_results[:3], 1):
-        activation = params[0]
-        solver = params[1]
-        layers = params[2]
-        max_iter = params[3]
-        print(f"Model {i} parametre: aktivacna funkcia = {activation} solver = {solver}, hidden_layer_sizes = {layers}, max_iter = {max_iter}")
-        print(f"Presnost modelu {i}: {accuracy*100:.3f}%")
-        print(f"Predikovane vysledky:               Vyhry: {predikovane_vyhry}, Prehry: {predikovane_prehry}, Remizy: {predikovane_remizy}")
-        print(f"Predikovane spravne vysledky:       Vyhry: {spravne_vyhry}, Prehry: {spravne_prehry}, Remizy: {spravne_remizy}")
-        print('--------')
-      
 
 
 
@@ -300,59 +242,41 @@ def lstm_in_keras(X_train_encoded, y_train, X_test_encoded, y_test):
         model.compile(loss='sparse_categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
         return model
 
-    # Convert sparse matrices to dense arrays
     X_train_dense = X_train_encoded.toarray()
     X_test_dense = X_test_encoded.toarray()
 
-    # Vytvorenie modelu
-    model = KerasClassifier(build_fn=create_model, verbose=0)
-
-    # Definícia mriežky parametrov
     param_grid = {
         'model__activation': ['sigmoid', 'softmax', 'tanh', 'relu'],
         'model__optimizer': ['adam', 'sgd', 'rmsprop'],
         'model__dropout_rate': [0.2],
         'epochs': [8,10,15],
         'batch_size': [32],
-        'random_state': [42],   }
+  }
+    
+    model = KerasClassifier(build_fn=create_model, verbose=0)
 
-    # Vsetky kombinacie parametrov
-    all_param_combinations = list(product(*param_grid.values()))
-    print()
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+    grid_search.fit(X_train_dense, y_train)
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test_dense)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    cv_scores = cross_val_score(best_model, X_train_dense, y_train, cv=5, scoring='accuracy')
+
     print()
     print('---------------------------------------------[ LSTM KERAS ]---------------------------------------------')
-    print('Pocet kombinacii: ', len(all_param_combinations))
-    print('Najlepsie 3 modely: ')
+    print("Pocet kombinacii: ", len(list(product(*param_grid.values()))))
+    print('Najlepsie parametre modelu: ', grid_search.best_params_)
+    print("Cross-validacia skore: ", cv_scores)
+    print(f"Priemerna presnost modelu pri krizovej validacii: {cv_scores.mean()*100:.3f}%")
+    print(f"Rozpyl presnosti modelu pri krizovej validacii: ± {cv_scores.std()*100:.3f}%")
+    print(f"Presnost modelu na testovacej sade: {accuracy*100:.3f}%")
     print('--------')
-    results = []
-    for params in all_param_combinations:    # Robim modely pre vsetky kombinacie parametrov
-        model.set_params(**dict(zip(param_grid.keys(), params))) 
-        model.fit(X_train_dense, y_train)
-        y_pred = model.predict(X_test_dense)
+    print(f"Predikovane vysledky:               Vyhry: {sum(y_pred == 2)}, Prehry: {sum(y_pred == 0)}, Remizy: {sum(y_pred == 1)}")
+    print(f"Predikovane spravne vysledky:       Vyhry: {sum((y_pred == y_test) & (y_test == 2))}, Prehry: {sum((y_pred == y_test) & (y_test == 0))}, Remizy: {sum((y_pred == y_test) & (y_test == 1))}")
 
-        accuracy = (y_pred == y_test).mean()
-        predikovane_vyhry = sum(y_pred == 2)
-        predikovane_prehry = sum(y_pred == 0)
-        predikovane_remizy = sum(y_pred == 1)
 
-        spravne_vyhry = sum((y_pred == y_test) & (y_test == 2))
-        spravne_prehry = sum((y_pred == y_test) & (y_test == 0))
-        spravne_remizy = sum((y_pred == y_test) & (y_test == 1))
-        results.append((params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy))
-    # Zoradujem modely podla presnosti
-    sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-
-    # Vypisujem modely
-    for i, (params, accuracy, predikovane_vyhry, predikovane_prehry, predikovane_remizy, spravne_vyhry, spravne_prehry, spravne_remizy) in enumerate(sorted_results[:3], 1):
-        activation = params[0]
-        optimizer = params[1]
-        dropout = params[2]
-        epochs = params[3]
-        print(f"Model {i} parametre: aktivacna funkcia = {activation}, optimizer = {optimizer}, dropout_rate = {dropout}, epochs = {epochs}")
-        print(f"Presnost modelu {i}: {accuracy*100:.3f}%")
-        print(f"Predikovane vysledky:               Vyhry: {predikovane_vyhry}, Prehry: {predikovane_prehry}, Remizy: {predikovane_remizy}")
-        print(f"Predikovane spravne vysledky:       Vyhry: {spravne_vyhry}, Prehry: {spravne_prehry}, Remizy: {spravne_remizy}")
-        print('--------')
 
 
 single_layer_perceptron_keras(X_train_encoded, y_train, X_test_encoded, y_test)
